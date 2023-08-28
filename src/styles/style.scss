@@ -136,7 +136,7 @@ iframe {
 	border-radius: 3px;
 	text-indent: 0.01px;
 	text-overflow: '';
-	-webkit-appearance: button; /* hide default arrow in chrome OSX */
+	-webkit-appearance: none; /* hide default arrow in chrome OSX */
 	&:hover {
 		background-color: #444;
 	}
