@@ -1,0 +1,4 @@
+{
+	"eslint.validate": ["svelte"],
+	"editor.tabSize": 2
+}
