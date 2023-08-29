@@ -19,6 +19,7 @@
 	function handleArticleChange(e: any) {
 		$currentSlug = e.target.value;
 		history.pushState({}, "", e.target.value);
+		window.scrollTo(0, 0);
 	}
 </script>
 
