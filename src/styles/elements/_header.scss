@@ -38,7 +38,7 @@
 	}
 }
 
-@include respond-at(false, 485px) {
+@include respond-at(false, 530px) {
 	body {
 		padding-top: 50px;
 	}
@@ -49,20 +49,34 @@
 		left: 0;
 		width: 100%;
 		height: 50px;
+		.container {
+			display: flex;
+			align-items: center;
+		}
 		.logo {
-			width: 140px;
+			width: 100%;
+			max-width: 100px;
 			height: 35px;
-			background-size: cover;
-			margin-top: 8px;
+			background-size: contain;
+			background-repeat: no-repeat;
+			background-position: center center;
+			margin-bottom: 10px;
+			margin-right: 30px;
 		}
 		.nav {
+			width: 100%;
 			line-height: 50px;
+			display: flex;
+			align-items: center;
 			a {
+				flex: 1;
 				margin-right: 15px;
-				font-size: 16px;
+				font-size: 13px;
 				text-align: center;
-				width: 75px;
 				padding-right: 0;
+				&.selected {
+					border-top: 3px solid #fff;
+				}
 			}
 		}
 	}

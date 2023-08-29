@@ -73,7 +73,7 @@
 			strong {
 				font-size: 16px;
 				font-weight: 600;
-				margin-bottom: $pad / 2;
+				margin-bottom: calc($pad / 2);
 			}
 		}
 	}
