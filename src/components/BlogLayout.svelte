@@ -17,7 +17,8 @@
 	}
 
 	function handleArticleChange(e: any) {
-		window.location.pathname = e.target.value;
+		$currentSlug = e.target.value;
+		history.pushState({}, "", e.target.value);
 	}
 </script>
 

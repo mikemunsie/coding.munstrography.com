@@ -1,17 +1,16 @@
 <script lang="ts">
 	import { codeArticles, projectArticles } from "@/blog/articles";
 	import { onMount } from "svelte";
-	import { page } from "$app/stores";
 	import { setGlobalContext } from "@/context/globalContext";
-	import waitForElement from "@/lib/waitForElement";
 	import BlogLayout from "@/components/BlogLayout.svelte";
 	import { writable } from "svelte/store";
+	import { page } from "$app/stores";
+	import asyncDerivedConsistent from "@/lib/derivedConsistent";
 
-	let BlogPost: any;
+	let blogPost = writable<any>("");
 	const currentSlug = writable($page.url.pathname);
-	const category = writable<"projects" | "code">(
-		$currentSlug.indexOf("/projects") > -1 ? "projects" : "code"
-	);
+	const category = writable<"projects" | "code">();
+	$category = $currentSlug.indexOf("/projects") > -1 ? "projects" : "code";
 
 	// Article lookup
 	const articles = $category === "code" ? codeArticles : projectArticles;
@@ -49,6 +48,31 @@
 	};
 
 	$: {
+		if ($currentSlug.indexOf("/code") > -1 || $currentSlug === "/") {
+			if ($currentSlug === "/" || $currentSlug === "/code") {
+				(async () => {
+					$blogPost = (await import(`@/blog/code/${codeArticles[0].slug}.svelte`)).default;
+				})();
+			} else {
+				(async () => {
+					$blogPost = (await import(`@/blog/code/${$currentSlug.substring(6)}.svelte`)).default;
+				})();
+			}
+		} else if ($currentSlug.indexOf("/projects") > -1) {
+			if ($currentSlug === "/projects") {
+				(async () => {
+					$blogPost = (await import(`@/blog/projects/${projectArticles[0].slug}.svelte`)).default;
+				})();
+			} else {
+				(async () => {
+					$blogPost = (await import(`@/blog/projects/${$currentSlug.substring(10)}.svelte`))
+						.default;
+				})();
+			}
+		}
+	}
+
+	$: {
 		setFeaturedImage("");
 		let currentArticleIndex = articles.findIndex((article) => article.url === $currentSlug);
 		if (currentArticleIndex === -1) currentArticleIndex = 0;
@@ -58,21 +82,7 @@
 		$currentArticle = articles[currentArticleIndex];
 	}
 
-	onMount(async () => {
-		if ($currentSlug.indexOf("/code") > -1 || $currentSlug === "/") {
-			if ($currentSlug === "/" || $currentSlug === "/code") {
-				BlogPost = (await import(`@/blog/code/${codeArticles[0].slug}.svelte`)).default;
-			} else {
-				BlogPost = (await import(`@/blog/code/${$currentSlug.substring(6)}.svelte`)).default;
-			}
-		} else if ($currentSlug.indexOf("/projects") > -1) {
-			if ($currentSlug === "/projects") {
-				BlogPost = (await import(`@/blog/projects/${projectArticles[0].slug}.svelte`)).default;
-			} else {
-				BlogPost = (await import(`@/blog/projects/${$currentSlug.substring(10)}.svelte`)).default;
-			}
-		}
-
+	onMount(() => {
 		// Pressing right or left can take you to magical places
 		window.addEventListener("keydown", (e) => {
 			if (e.keyCode === 39) {
@@ -103,8 +113,8 @@
 	/>
 </svelte:head>
 
-{#if BlogPost}
+{#if $blogPost}
 	<BlogLayout>
-		<svelte:component this={BlogPost} />
+		<svelte:component this={$blogPost} />
 	</BlogLayout>
 {/if}
