@@ -23,8 +23,8 @@
 			height: 100%;
 			background-size: cover;
 			background-position: center;
-			-webkit-filter: blur(1px);
-			@include helpers-opacity(0.5);
+			filter: blur(2px);
+			opacity: 0.1;
 		}
 		.overlay {
 			position: absolute;
